@@ -98,3 +98,40 @@ COMMIT;
 
 -- verfiy changes
 SELECT * FROM animals;
+
+-- _________________________________________
+
+-- SELECTED QUESTIONS
+
+-- [1] How many animas are there?
+SELECT COUNT(*) as count FROM animals;
+
+-- [2] How many animals have never tried to escape?
+SELECT COUNT(*) as "Never escaped animals" FROM animals
+WHERE escape_attempts = 0;
+
+-- [3] What is the average weight of animals?
+SELECT AVG(weight_kg) as "Avarage Weight" FROM animals;
+
+-- [4] Who escapes the most, neutered or not neutered animals?
+SELECT
+	CASE
+		WHEN neutered = true THEN 'neutered'
+		WHEN neutered = false THEN 'NOT NEUTERED'
+	END,
+	SUM(escape_attempts) as "Total escape attmpts"
+FROM animals
+GROUP BY neutered
+ORDER BY "Total escape attmpts" DESC
+LIMIT 1;
+
+-- [5] What is the minimum and maximum weight of each type of animal?
+SELECT species, MIN(weight_kg), MAX(weight_kg)
+FROM animals
+GROUP BY species;
+
+-- [6] What is the average number of escape attempts per animal type of those born between 1990 and 2000?
+SELECT species, AVG(escape_attempts)
+FROM animals
+WHERE date_of_birth BETWEEN '1990.01.01' AND '2000.12.31'
+GROUP BY species;
