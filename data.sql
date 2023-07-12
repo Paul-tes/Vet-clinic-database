@@ -53,3 +53,22 @@ SET owner_id =
       WHEN name IN ('Charmander', 'Squirtle', 'Blossom') THEN (SELECT id FROM owners WHERE full_name = 'Melody Pond')
       WHEN name IN ('Angemon', 'Boarmon') THEN (SELECT id FROM owners WHERE full_name = 'Dean Winchester')
 END;
+
+
+-- Add sample data to vets
+INSERT INTO vets (name, age, date_of_graduation)
+VALUES
+  ('William Tatcher', 45, '2000-04-23'),
+  ('Maisy Smith', 26, '2019-01-17'),
+  ('Stephanie Mendez', 64, '1981-05-04'),
+  ('Jack Harkness', 38, '2008-06-08');
+
+-- Add sample data to specialties
+INSERT INTO specializations (vet_id, species_id)
+SELECT v.id, s.id
+FROM vets v
+JOIN species s ON	
+  (v.name = 'William Tatcher' AND s.name = 'Pokemon') OR
+  (v.name = 'Stephanie Mendez' AND s.name = 'Digimon') OR
+  (v.name = 'Stephanie Mendez' AND s.name = 'Pokemon') OR
+  (v.name = 'Jack Harkness' AND s.name = 'Digimon');
