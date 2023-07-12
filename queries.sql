@@ -119,7 +119,7 @@ SELECT
 		WHEN neutered = true THEN 'neutered'
 		WHEN neutered = false THEN 'NOT NEUTERED'
 	END,
-	SUM(escape_attempts) as "Total escape attmpts"
+	AVG(escape_attempts) as "Total escape attmpts"
 FROM animals
 GROUP BY neutered
 ORDER BY "Total escape attmpts" DESC
