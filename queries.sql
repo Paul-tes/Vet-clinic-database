@@ -31,3 +31,70 @@ WHERE name != 'Gabumon';
 -- [8]
 SELECT * FROM animals
 WHERE weight_kg BETWEEN 10.4 AND 17.3;
+
+-- ______________________________________________
+
+-- TRANSACTION QUIRIES
+
+-- [1]
+BEGIN TRANSACTION;
+
+	UPDATE animals SET species = 'unspecified';
+	SELECT * FROM animals; -- Verify
+	
+ROLLBACK; -- Roll back
+
+-- Verify role back
+SELECT * FROM animals;
+
+
+-- [2]
+BEGIN TRANSACTION;
+
+	-- Update the animals table to set the species column to digimon for all animals that have a name ending in mon
+	UPDATE animals
+	SET species = 'digimon'
+	WHERE name LIKE '%mon';
+
+	-- Update the animals table to set the species column to pokemon for all animals that don't have species already set
+	UPDATE animals
+	SET species = 'pokemon'
+	WHERE species IS NULL;
+
+	-- Verify changes
+	SELECT * FROM animals;
+
+COMMIT;
+
+-- Verify that the changes persist after the commit
+SELECT * FROM animals;
+
+-- [3]
+BEGIN TRANSACTION;
+	-- delete all records
+	DELETE FROM animals;
+ROLLBACK;
+
+-- verfiy the data is still exist.
+SELECT * FROM animals;
+
+-- [4]
+BEGIN TRANSACTION;
+	-- Delete all animals that was born after Jan, 1st, 2022
+	DELETE FROM animals
+	WHERE date_of_birth > '2022.01.01';
+	SAVEPOINT deleteNewBorn; -- save point above transaction.
+	
+	-- update wight of animals
+	UPDATE animals
+	SET weight_kg = weight_kg * -1;
+	
+	ROLLBACK TO deleteNewBorn;
+	-- correction on updates of weight.
+	UPDATE animals
+	SET weight_kg = weight_kg * -1
+	WHERE weight_kg < 0;
+COMMIT;
+
+-- verfiy changes
+SELECT * FROM animals;
