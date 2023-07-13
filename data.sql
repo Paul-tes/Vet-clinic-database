@@ -53,3 +53,50 @@ SET owner_id =
       WHEN name IN ('Charmander', 'Squirtle', 'Blossom') THEN (SELECT id FROM owners WHERE full_name = 'Melody Pond')
       WHEN name IN ('Angemon', 'Boarmon') THEN (SELECT id FROM owners WHERE full_name = 'Dean Winchester')
 END;
+
+
+-- Add sample data to vets
+INSERT INTO vets (name, age, date_of_graduation)
+VALUES
+  ('William Tatcher', 45, '2000-04-23'),
+  ('Maisy Smith', 26, '2019-01-17'),
+  ('Stephanie Mendez', 64, '1981-05-04'),
+  ('Jack Harkness', 38, '2008-06-08');
+
+-- Add sample data to specialties
+INSERT INTO specializations (vet_id, species_id)
+SELECT v.id, s.id
+FROM vets v
+JOIN species s ON	
+  (v.name = 'William Tatcher' AND s.name = 'Pokemon') OR
+  (v.name = 'Stephanie Mendez' AND s.name = 'Digimon') OR
+  (v.name = 'Stephanie Mendez' AND s.name = 'Pokemon') OR
+  (v.name = 'Jack Harkness' AND s.name = 'Digimon');
+
+-- Add sample data to visits table
+INSERT INTO visits (animal_id, vet_id, date_of_visit)
+SELECT a.id, v.id, TO_DATE(visit_date, 'YYYY-MM-DD')
+FROM animals a, vets v, (
+  VALUES
+    ('Agumon', 'William Tatcher', '2020-05-24'),
+    ('Agumon', 'Stephanie Mendez', '2020-07-22'),
+    ('Gabumon', 'Jack Harkness', '2021-02-02'),
+    ('Pikachu', 'Maisy Smith', '2020-01-05'),
+    ('Pikachu', 'Maisy Smith', '2020-03-08'),
+    ('Pikachu', 'Maisy Smith', '2020-05-14'),
+    ('Devimon', 'Stephanie Mendez', '2021-05-04'),
+    ('Charmander', 'Jack Harkness', '2021-02-24'),
+    ('Plantmon', 'Maisy Smith', '2019-12-21'),
+    ('Plantmon', 'William Tatcher', '2020-08-10'),
+    ('Plantmon', 'Maisy Smith', '2021-04-07'),
+    ('Squirtle', 'Stephanie Mendez', '2019-09-29'),
+    ('Angemon', 'Jack Harkness', '2020-10-03'),
+    ('Angemon', 'Jack Harkness', '2020-11-04'),
+    ('Boarmon', 'Maisy Smith', '2019-01-24'),
+    ('Boarmon', 'Maisy Smith', '2019-05-15'),
+    ('Boarmon', 'Maisy Smith', '2020-02-27'),
+    ('Boarmon', 'Maisy Smith', '2020-08-03'),
+    ('Blossom', 'Stephanie Mendez', '2020-05-24'),
+    ('Blossom', 'William Tatcher', '2021-01-11')
+) AS visits(animal_name, vet_name, visit_date)
+WHERE a.name = visits.animal_name AND v.name = visits.vet_name;

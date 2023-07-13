@@ -44,3 +44,31 @@ ALTER TABLE animals ADD COLUMN species_id INT REFERENCES species(id);
 -- Add column owner_id which is a foreign key referencing the owners table
 ALTER TABLE animals ADD COLUMN owner_id INT REFERENCES owners(id);
 
+
+-- Add Vets table
+CREATE TABLE vets (
+  id SERIAL PRIMARY KEY,
+  name TEXT,
+  age INT,
+  date_of_graduation DATE
+);
+
+-- Add specializations table for maintain many to many relationship b/n vet and species.
+CREATE TABLE specializations (
+  vet_id INT,
+  species_id INT,
+  PRIMARY KEY (vet_id, species_id),
+  FOREIGN KEY (vet_id) REFERENCES vets(id) ON DELETE CASCADE, -- DEETE CASCADE is ON for to insure referential integrity on delelation of row.
+  FOREIGN KEY (species_id) REFERENCES species(id) ON DELETE CASCADE
+);
+
+-- Add Visits join table to maintain many to many r/n b/n animals and thire visitors from vet.
+CREATE TABLE visits (
+  animal_id INT,
+  vet_id INT,
+  date_of_visit DATE,
+  PRIMARY KEY (animal_id, vet_id, date_of_visit),
+  FOREIGN KEY (animal_id) REFERENCES animals(id) ON DELETE CASCADE,
+  FOREIGN KEY (vet_id) REFERENCES vets(id) ON DELETE CASCADE
+);
+
