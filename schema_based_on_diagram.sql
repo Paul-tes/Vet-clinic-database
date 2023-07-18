@@ -33,3 +33,17 @@ CREATE TABLE IF NOT EXISTS public.invoice_items (
     invoice_id INT REFERENCES public.invoices (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
     treatment_id INT REFERENCES public.treatments (id) MATCH SIMPLE ON UPDATE NO ACTION
 );
+
+CREATE TABLE IF NOT EXISTS treatment_histories (
+	history_id int,
+	treatment_id int,
+	FOREIGN KEY (history_id) REFERENCES medical_histories(id),
+	FOREIGN KEY (treatment_id) REFERENCES treatments(id)
+);
+
+CREATE INDEX treatment_histories_history_index ON treatment_histories(history_id);
+CREATE INDEX treatment_histories_treatment_index ON treatment_histories(treatment_id);
+CREATE INDEX invoice_items_invoice_index ON invoice_items(invoice_id);
+CREATE INDEX invoice_items_treatment_index ON invoice_items(treatment_id);
+CREATE INDEX invoices_medical_history_index ON invoices(medical_history_id);
+CREATE INDEX medical_histories_patient_index ON medical_histories(patient_id);
