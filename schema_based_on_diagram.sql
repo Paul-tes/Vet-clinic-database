@@ -4,13 +4,11 @@ CREATE TABLE IF NOT EXISTS public.patients (
     date_of_birth DATE
 );
 
-
 CREATE TABLE IF NOT EXISTS public.treatments (
     id INT PRIMARY KEY,
     type VARCHAR(255),
     name VARCHAR(255) NOT NULL
 );
-
 
 CREATE TABLE IF NOT EXISTS public.medical_histories (
     id INT PRIMARY KEY,
@@ -19,9 +17,7 @@ CREATE TABLE IF NOT EXISTS public.medical_histories (
     status VARCHAR(255)
 );
 
-
-CREATE TABLE IF NOT EXISTS public.invoices
-(
+CREATE TABLE IF NOT EXISTS public.invoices (
     id INT PRIMARY KEY,
     total_amount DECIMAL(5, 2) NOT NULL,
     generated_at DATE,
@@ -29,12 +25,11 @@ CREATE TABLE IF NOT EXISTS public.invoices
     medical_history_id INT REFERENCES public.medical_histories (id) ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
-CREATE TABLE IF NOT EXISTS public.invoice_items
-(
+CREATE TABLE IF NOT EXISTS public.invoice_items (
     id INT PRIMARY KEY,
     unit_price DECIMAL(5, 2),
     quantity INT,
     total_price DECIMAL(5, 2),
-    invoice_id INT  REFERENCES public.invoices (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
+    invoice_id INT REFERENCES public.invoices (id) MATCH SIMPLE ON UPDATE NO ACTION ON DELETE NO ACTION,
     treatment_id INT REFERENCES public.treatments (id) MATCH SIMPLE ON UPDATE NO ACTION
 );
